@@ -64,15 +64,28 @@ neumf_config = {'alias': 'pretrain_neumf_factor8neg4',
                 }
 
 # Load Data
-ml1m_dir = 'data/ml-1m/ratings.dat'
-ml1m_rating = pd.read_csv(ml1m_dir, sep='::', header=None, names=['uid', 'mid', 'rating', 'timestamp'],  engine='python')
-# Reindex
-user_id = ml1m_rating[['uid']].drop_duplicates().reindex()
-user_id['userId'] = np.arange(len(user_id))
-ml1m_rating = pd.merge(ml1m_rating, user_id, on=['uid'], how='left')
-item_id = ml1m_rating[['mid']].drop_duplicates()
-item_id['itemId'] = np.arange(len(item_id))
-ml1m_rating = pd.merge(ml1m_rating, item_id, on=['mid'], how='left')
+# ml1m_dir = 'data/ml-1m/ratings.dat'
+# ml1m_rating = pd.read_csv(ml1m_dir, sep='::', header=None, names=['uid', 'mid', 'rating', 'timestamp'],  engine='python')
+# # Reindex
+# user_id = ml1m_rating[['uid']].drop_duplicates().reindex()
+# user_id['userId'] = np.arange(len(user_id))
+# ml1m_rating = pd.merge(ml1m_rating, user_id, on=['uid'], how='left')
+# item_id = ml1m_rating[['mid']].drop_duplicates()
+# item_id['itemId'] = np.arange(len(item_id))
+# ml1m_rating = pd.merge(ml1m_rating, item_id, on=['mid'], how='left')
+
+events = pd.read_csv('../../events.csv')
+events = events.drop(columns = "transactionid")
+events.rename(columns = {'visitorid':'userId', 
+                         "itemid": "itemId",
+                         "event": "rating"}, inplace = True)
+events = events['rating'].map({'view': 1,
+                      'addtocart': 5,
+                      'transaction':10},
+                       na_action=None)
+
+ml1m_rating = events
+
 ml1m_rating = ml1m_rating[['userId', 'itemId', 'rating', 'timestamp']]
 print('Range of userId is [{}, {}]'.format(ml1m_rating.userId.min(), ml1m_rating.userId.max()))
 print('Range of itemId is [{}, {}]'.format(ml1m_rating.itemId.min(), ml1m_rating.itemId.max()))
