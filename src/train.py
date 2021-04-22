@@ -74,7 +74,7 @@ neumf_config = {'alias': 'pretrain_neumf_factor8neg4',
 # item_id['itemId'] = np.arange(len(item_id))
 # ml1m_rating = pd.merge(ml1m_rating, item_id, on=['mid'], how='left')
 
-events = pd.read_csv('../../events.csv')
+events = pd.read_csv('data/events.csv')
 events = events.drop(columns = "transactionid")
 events.rename(columns = {'visitorid':'userId', 
                          "itemid": "itemId",
