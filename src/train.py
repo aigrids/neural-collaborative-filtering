@@ -79,7 +79,7 @@ events = events.drop(columns = "transactionid")
 events.rename(columns = {'visitorid':'userId', 
                          "itemid": "itemId",
                          "event": "rating"}, inplace = True)
-events = events['rating'].map({'view': 1,
+events['rating'] = events['rating'].map({'view': 1,
                       'addtocart': 5,
                       'transaction':10},
                        na_action=None)
